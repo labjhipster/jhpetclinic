@@ -1,0 +1,5 @@
+npm install -g generator-jhipster && npm install -g yo
+
+#jhipster import-jdl *.jdl 
+
+#./mvnw -Dskip.npm
