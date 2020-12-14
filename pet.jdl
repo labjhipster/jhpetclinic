@@ -1,58 +1,83 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName jhpetclinic
+    blueprints []
+    buildTool gradle
+    cacheProvider ehcache
+    clientFramework angularX
+    clientPackageManager npm
+    clientTheme flatly
+    clientThemeVariant primary
+    creationTimestamp 1607075380047
+    databaseType sql
+    devDatabaseType h2Disk
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    jhipsterVersion "6.10.5"
+    jwtSecretKey "NjhhYTg0MDUxMzllMzI4MzI3ZGE3NjVmNTJhOTlkNmU2NTgzMWE4NzM2MGU2MjU2YzQ2NTU4N2RiNzQ3N2NmM2RlOWZkMDdhNzU4ODYyNmFiNmZkYzI0YTA1MGNiZTI2NjUyZGEzODhmZjAxY2FiNTQzYTcxNDQ1ZTc1ZWM1YmQ="
+    languages [en]
+    messageBroker false
+    nativeLanguage en
+    otherModules []
+    packageName org.jhipster.petclinic
+    prodDatabaseType postgresql
+    searchEngine false
+    serverPort 8080
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    skipUserManagement false
+    testFrameworks []
+    useSass true
+    websocket false
+  }
 
-entity PetType(types) {
-    name String required maxlength(80)
+  entities Owner, Pet, PetType, Specialty, Vet, Visit
 }
 
-entity Specialty(specialties) {
-    name String required maxlength(80)
+entity Owner (owners) {
+  firstName String required maxlength(30),
+  lastName String required maxlength(30),
+  address String required maxlength(255),
+  city String required maxlength(80),
+  telephone String required maxlength(20)
 }
-
-entity Vet(vets) {
-    firstName String required maxlength(30)
-    lastName String required maxlength(30)
+entity Pet (pets) {
+  name String required maxlength(30),
+  birthDate LocalDate
 }
-
-entity Owner(owners) {
-    firstName String required maxlength(30)
-    lastName String required maxlength(30)
-    address String required maxlength(255)
-    city String required maxlength(80)
-    telephone String required maxlength(20)
+entity PetType (types) {
+  name String required maxlength(80)
 }
-
-entity Pet(pets) {
-    name String required maxlength(30)
-    birthDate LocalDate
+entity Specialty (specialties) {
+  name String required maxlength(80)
 }
-
-entity Visit(visits) {
-    visitDate LocalDate
-    description String required maxlength(255)
+entity Vet (vets) {
+  firstName String required maxlength(30),
+  lastName String required maxlength(30)
 }
-
-// --- Relationships ----------------------------------------------
+entity Visit (visits) {
+  visitDate LocalDate,
+  description String required maxlength(255)
+}
 relationship OneToMany {
-  Owner{pets(name)} to Pet{owner(lastName)}
+  Owner{pets} to Pet{owner(lastName)},
   Pet{visits} to Visit{pet(name)}
 }
-
 relationship ManyToOne {
   Pet{type(name)} to PetType
 }
-
-relationship ManyToMany{
-    Vet{specialties(name)} to Specialty{vets}
+relationship ManyToMany {
+  Vet{specialties(name)} to Specialty{vets}
 }
 
-// --- Application options ----------------------------------------
-
-// Set pagination options
-paginate PetType, Specialty, Vet, Owner, Pet, Visit with pagination
-
-// We will use DTO's and not expose domain classes directly
-dto * with mapstruct
-
-// Set service options to all except few
-service all with serviceImpl
-
-filter Vet, Owner, Pet, Visit
+dto Owner, Pet, PetType, Specialty, Vet, Visit with mapstruct
+paginate Owner, Pet, PetType, Specialty, Vet, Visit with pagination
+service Owner, Pet, PetType, Specialty, Vet, Visit with serviceImpl
+filter Owner, Pet, Vet, Visit
